@@ -30,5 +30,6 @@ In the Cloudflare dashboard: **Workers & Pages → Create → Import a repositor
 - **Deploy command:** `npx wrangler deploy`
 - **Preview command:** leave Cloudflare's default (gives preview URLs for other branches)
 
-Every push to `main` then builds and deploys. Config lives in `wrangler.jsonc`;
-add a `routes` block there if you want a custom domain.
+Every push to `main` then builds and deploys. Config lives in `wrangler.jsonc`,
+including the custom domains (`bloxbound.info` and `www.bloxbound.info`), which
+Cloudflare attaches to the Worker on deploy.

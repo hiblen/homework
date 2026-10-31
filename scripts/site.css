@@ -39,6 +39,19 @@ h1 {
   margin: 0 0 .5rem; color: var(--blue);
 }
 .lede { color: var(--muted); margin: 0 0 1.5rem; }
+/* BloxBound logo: always on its own dark badge, as on bloxbound.co.uk */
+.brand {
+  display: inline-flex; align-items: center; gap: .75rem;
+  margin-bottom: 1.5rem; padding: .6rem 1.1rem .6rem .6rem;
+  background: #0f1420; border: 2px solid #2c3856; border-radius: 12px;
+}
+.brand img { display: block; border-radius: 8px; }
+.wordmark {
+  font-family: "Bungee", "Impact", "Arial Black", sans-serif;
+  font-size: clamp(1.5rem, 6vw, 2rem); line-height: 1; color: #ffc83d;
+  text-shadow: 3px 3px 0 #b3471b;
+}
+.wordmark span { color: #e8ecf6; text-shadow: 3px 3px 0 #2b3a66; }
 .back {
   display: inline-block; margin-bottom: 1rem; color: var(--muted);
   text-decoration: none; font-size: .95rem;

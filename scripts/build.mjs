@@ -20,7 +20,8 @@ const page = (title, body) => `<!DOCTYPE html>
 <title>${esc(title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/bloxbound.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600&family=Atkinson+Hyperlegible:wght@400;700&family=Bungee&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site.css">
 </head>
 <body>
@@ -36,7 +37,7 @@ const card = (href, label, hint) =>
 
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
-cpSync(join(root, "scripts", "site.css"), join(dist, "site.css"));
+for (const file of ["site.css", "bloxbound.svg"]) cpSync(join(root, "scripts", file), join(dist, file));
 
 const subjectCards = site.subjects.map((s) => {
   const n = s.homework.length;
@@ -44,7 +45,8 @@ const subjectCards = site.subjects.map((s) => {
 });
 writeFileSync(
   join(dist, "index.html"),
-  page(site.title, `<h1>${esc(site.title)}</h1>
+  page(site.title, `<div class="brand"><img src="/bloxbound.svg" alt="" width="44" height="44"><span class="wordmark">Blox<span>Bound</span></span></div>
+<h1>${esc(site.title)}</h1>
 <p class="lede">Pick a subject.</p>
 <ul class="cards">
 ${subjectCards.join("\n")}
