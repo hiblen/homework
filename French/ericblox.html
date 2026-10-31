@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ericblox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page: #F5F7FB;
+  --ink: #17223B;
+  --blue: #2346A8;
+  --muted: #5B6680;
+  --rule: #D6DDEB;
+  --margin: #E06363;
+  --active: #E4EBFB;
+  --good: #1B7F46; --good-bg: #DDF3E6;
+  --bad: #B93A2E; --bad-bg: #FBE4E1;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --good: #6FD69A; --good-bg: #16382A; --bad: #F08A80; --bad-bg: #3D1F22;
+    --page: #10172A; --ink: #E8ECF5; --blue: #8EA9FF; --muted: #9AA5BF;
+    --rule: #26304A; --margin: #E88080; --active: #1C2849; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --good: #6FD69A; --good-bg: #16382A; --bad: #F08A80; --bad-bg: #3D1F22;
+  --page: #10172A; --ink: #E8ECF5; --blue: #8EA9FF; --muted: #9AA5BF;
+  --rule: #26304A; --margin: #E88080; --active: #1C2849; color-scheme: dark;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  line-height: 1.5;
+}
+main {
+  max-width: 640px; margin: 0 auto; padding: 2rem 1.25rem 3rem 2.25rem;
+  border-left: 2px solid var(--margin);
+  min-height: 100%;
+}
+h1 {
+  font-family: "Literata", Georgia, serif; font-weight: 600;
+  font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1.1;
+  margin: 0 0 .5rem; color: var(--blue);
+}
+.lede { color: var(--muted); margin: 0 0 1.5rem; }
+.speed { display: flex; gap: .5rem; margin-bottom: 2rem; }
+.speed button {
+  font: inherit; font-size: .95rem; padding: .45rem 1rem; border-radius: 999px;
+  border: 1.5px solid var(--blue); background: transparent; color: var(--blue); cursor: pointer;
+}
+.speed button[aria-pressed="true"] { background: var(--blue); color: var(--page); }
+h2 {
+  font-family: "Literata", Georgia, serif; font-weight: 600; font-size: 1.3rem;
+  margin: 2rem 0 .25rem;
+}
+ul { list-style: none; margin: 0; padding: 0; }
+li + li { border-top: 1px solid var(--rule); }
+.phrase {
+  display: flex; align-items: center; gap: 1rem; width: 100%;
+  text-align: left; font: inherit; color: inherit; background: transparent;
+  border: 0; padding: .9rem .5rem; margin: 0 -.5rem; cursor: pointer; border-radius: 10px;
+}
+.phrase:hover { background: var(--active); }
+.phrase:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.phrase.speaking { background: var(--active); }
+.text { flex: 1; }
+.fr { display: block; font-family: "Literata", Georgia, serif; font-size: 1.3rem; line-height: 1.3; }
+.en { display: block; color: var(--muted); font-style: italic; }
+.icon { flex: none; width: 28px; height: 28px; color: var(--blue); }
+.speaking .icon .wave { animation: pulse .8s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .25; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .speaking .icon .wave { animation: none; } }
+.pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.pills button, .reset {
+  font: inherit; font-size: .95rem; padding: .45rem 1rem; border-radius: 999px;
+  border: 1.5px solid var(--blue); background: transparent; color: var(--blue); cursor: pointer;
+}
+.pills button[aria-pressed="true"] { background: var(--blue); color: var(--page); }
+.reset { border-color: var(--rule); color: var(--muted); }
+.scorebar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--page); padding: .6rem 0; margin: 0 0 .5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  border-bottom: 1px solid var(--rule); font-weight: 700;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--page); }
+.row { display: flex; align-items: center; gap: .5rem; border-radius: 10px; padding-right: .35rem; transition: background-color .2s; }
+.row .phrase { flex: 1; min-width: 0; margin: 0; }
+.row.correct { background: var(--good-bg); }
+.row.correct .fr { color: var(--good); }
+.row.wrong { background: var(--bad-bg); }
+.marks { display: flex; gap: .4rem; flex: none; }
+.mark {
+  width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--rule);
+  background: transparent; color: var(--muted); font: inherit; font-size: 1.15rem; cursor: pointer;
+}
+.mark:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.mark.tick[aria-pressed="true"] { background: var(--good); border-color: var(--good); color: var(--page); }
+.mark.cross[aria-pressed="true"] { background: var(--bad); border-color: var(--bad); color: var(--page); }
+main[data-hide="en"] .row:not(.revealed) .en,
+main[data-hide="fr"] .row:not(.revealed) .fr { filter: blur(7px); user-select: none; }
+.note { margin-top: 2.5rem; font-size: .9rem; color: var(--muted); }
+.warn { display: none; padding: .75rem 1rem; border: 1.5px solid var(--margin); border-radius: 10px; margin-bottom: 1.5rem; }
+/* Blocky game theme */
+:root {
+  --page: #DFF1FF; --ink: #1D2433; --blue: #2F6FE0; --muted: #4A5670; --rule: #1D2433;
+  --active: #FFF4C2; --card: #FFFFFF; --coin: #FFC928;
+  --good: #2EA83B; --good-bg: #D6F5D2; --bad: #DD3B30; --bad-bg: #FFDCD8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #141B2E; --ink: #F2F5FF; --blue: #7FA8FF; --muted: #B4BED6; --rule: #000000;
+    --active: #2B2A16; --card: #1E2740; --coin: #FFC928;
+    --good: #4FD35E; --good-bg: #183A1E; --bad: #FF6B5E; --bad-bg: #3E1A1A;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #141B2E; --ink: #F2F5FF; --blue: #7FA8FF; --muted: #B4BED6; --rule: #000000;
+  --active: #2B2A16; --card: #1E2740; --coin: #FFC928;
+  --good: #4FD35E; --good-bg: #183A1E; --bad: #FF6B5E; --bad-bg: #3E1A1A;
+}
+body {
+  background-color: var(--page);
+  background-image: radial-gradient(circle at 12px 12px, rgba(0,0,0,.07) 5px, transparent 6px);
+  background-size: 24px 24px;
+}
+main { border-left: 0; padding-left: 1.25rem; }
+h1, h2, .fr, .hud, .pills button, .speed button, .reset, .mark, .pop {
+  font-family: "Lilita One", "Arial Black", system-ui, sans-serif; font-weight: 400;
+}
+h1 { color: var(--blue); text-shadow: 0 4px 0 var(--rule); letter-spacing: .01em; }
+h2 { font-size: 1.5rem; margin-top: 2.25rem; margin-bottom: .6rem; }
+.fr { font-size: 1.35rem; }
+ul { display: grid; gap: .7rem; }
+li + li { border-top: 0; }
+.row {
+  position: relative; background: var(--card); border: 3px solid var(--rule);
+  border-radius: 8px; box-shadow: 0 5px 0 var(--rule); padding: .1rem .5rem .1rem .25rem;
+}
+.row.correct { background: var(--good-bg); border-color: var(--good); box-shadow: 0 5px 0 var(--good); }
+.row.wrong { background: var(--bad-bg); border-color: var(--bad); box-shadow: 0 5px 0 var(--bad); }
+.phrase:hover, .phrase.speaking { background: transparent; }
+.phrase.speaking .fr { color: var(--blue); }
+.mark, .pills button, .speed button, .reset {
+  border: 3px solid var(--rule); border-radius: 8px; box-shadow: 0 4px 0 var(--rule);
+  background: var(--card); color: var(--ink); transition: transform .05s;
+}
+.mark:active, .pills button:active, .speed button:active, .reset:active { transform: translateY(4px); box-shadow: none; }
+.pills button[aria-pressed="true"], .speed button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+.mark.tick[aria-pressed="true"] { background: var(--good); border-color: var(--rule); color: #fff; }
+.mark.cross[aria-pressed="true"] { background: var(--bad); border-color: var(--rule); color: #fff; }
+.scorebar {
+  background: var(--card); border: 3px solid var(--rule); border-radius: 8px;
+  box-shadow: 0 4px 0 var(--rule); padding: .5rem .75rem; margin-bottom: 1rem;
+}
+.hud { flex: 1; font-size: 1.05rem; }
+.hud #level { color: var(--blue); margin-right: .6rem; }
+.xp { height: 14px; border: 3px solid var(--rule); border-radius: 6px; background: var(--page); overflow: hidden; margin-top: .35rem; }
+.xp span { display: block; height: 100%; width: 0; background: var(--coin); transition: width .3s; }
+.pop {
+  position: absolute; right: 6.5rem; top: .2rem; color: #B87A00; font-size: 1.2rem;
+  pointer-events: none; animation: pop .9s ease-out forwards;
+}
+@keyframes pop { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-28px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pop { animation: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ericblox</h1>
+  <p class="lede">Tap a phrase to hear it in French. To test yourself, hide one language, say the answer out loud, tap the phrase to check, then mark it ✓ or ✗.</p>
+  <p class="warn" id="warn">This browser can’t speak text aloud. Try Chrome or Safari.</p>
+
+  <div class="speed" role="group" aria-label="Speaking speed">
+    <button type="button" data-rate="0.9" aria-pressed="true">Normal</button>
+    <button type="button" data-rate="0.6" aria-pressed="false">Slow</button>
+  </div>
+
+  <div class="pills" role="group" aria-label="Test mode" id="modes">
+    <button type="button" data-hide="none" aria-pressed="true">Show both</button>
+    <button type="button" data-hide="en" aria-pressed="false">Hide English</button>
+    <button type="button" data-hide="fr" aria-pressed="false">Hide French</button>
+  </div>
+
+  <div class="scorebar">
+    <div class="hud">
+      <span id="level"></span><span id="score" aria-live="polite"></span>
+      <div class="xp" aria-hidden="true"><span id="xpfill"></span></div>
+    </div>
+    <button type="button" class="reset" id="reset">Clear marks</button>
+  </div>
+
+  <h2>Spelling</h2>
+  <ul id="spelling"></ul>
+
+  <h2>Les nombres</h2>
+  <ul id="numbers"></ul>
+
+  <h2>L’âge et l’anniversaire</h2>
+  <ul id="birthday"></ul>
+
+  <h2>Les mois de l’année</h2>
+  <ul id="months"></ul>
+
+  <h2>Les jours de la semaine</h2>
+  <ul id="days"></ul>
+
+  <h2>Les couleurs</h2>
+  <ul id="colours"></ul>
+
+  <h2>Les objets</h2>
+  <ul id="things"></ul>
+
+  <h2>Les instructions</h2>
+  <ul id="instructions"></ul>
+
+  <p class="note">The book prints “Non, il n’y pas de ‘e’”, but it’s missing a word: the correct phrase is “Non, il n’y a pas de ‘e’”, which is what you’ll hear here.</p>
+</main>
+
+<script>
+const spelling = [
+  ["Comment ça s’écrit ?", "How do you spell it?"],
+  ["Oui, il y a un « e ».", "Yes, there is an ‘e’."],
+  ["Non, il n’y a pas de « e ».", "No, there isn’t an ‘e’."],
+  ["C’est…", "It’s…"],
+  ["Oui, c’est ça.", "Yes, that’s right."],
+  ["Non, c’est faux.", "No, that’s wrong."],
+  ["C’est à moi.", "It’s mine / It’s my turn."],
+  ["C’est à toi.", "It’s yours / It’s your turn."]
+];
+const numbers = ["un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix",
+  "onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf","vingt",
+  "vingt et un","vingt-deux","vingt-trois","vingt-quatre","vingt-cinq","vingt-six","vingt-sept",
+  "vingt-huit","vingt-neuf","trente","trente et un"].map((w, i) => [w, String(i + 1)]);
+const birthday = [
+  ["Quel âge as-tu ?", "How old are you?"],
+  ["J’ai … ans.", "I’m … (years old). You’ll hear: J’ai douze ans (I’m 12).", "J’ai douze ans."],
+  ["Quelle est la date de ton anniversaire ?", "What is the date of your birthday?"],
+  ["Mon anniversaire, c’est le …", "My birthday is on the … You’ll hear: le quinze mars (15 March).", "Mon anniversaire, c’est le quinze mars."],
+  ["Bon anniversaire !", "Happy birthday!"]
+];
+const days = [["lundi","Monday"],["mardi","Tuesday"],["mercredi","Wednesday"],["jeudi","Thursday"],
+  ["vendredi","Friday"],["samedi","Saturday"],["dimanche","Sunday"]];
+const colours = [
+  ["C’est de quelle couleur ?", "What colour is it?"],
+  ["blanc / blanche", "white", "blanc, blanche"],
+  ["bleu / bleue", "blue", "bleu, bleue"],
+  ["gris / grise", "grey", "gris, grise"],
+  ["jaune", "yellow"],["marron", "brown"],
+  ["noir / noire", "black", "noir, noire"],
+  ["orange", "orange"],["rose", "pink"],["rouge", "red"],
+  ["vert / verte", "green", "vert, verte"]
+];
+const things = [["un ballon","a ball"],["un imperméable","a raincoat"],["un nuage","a cloud"],
+  ["un sac","a bag"],["un uniforme","a uniform"],["un wagon","a carriage"]];
+const instructions = [["Écoutez !","Listen!"],["Écrivez !","Write!"],["Lisez !","Read!"],
+  ["Ouvrez vos livres !","Open your books!"],["Parlez !","Speak!"],["Rangez vos affaires !","Put your things away!"],
+  ["Taisez-vous !","Be quiet!"],["Travaillez à deux !","Work in pairs!"]];
+const months = [
+  ["janvier","January"],["février","February"],["mars","March"],["avril","April"],
+  ["mai","May"],["juin","June"],["juillet","July"],["août","August"],
+  ["septembre","September"],["octobre","October"],["novembre","November"],["décembre","December"]
+];
+
+// The letter "e" is said as its French letter name
+const spoken = t => t.replace(/« e »/g, "e,").replace(/…/g, "");
+
+const icon = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="wave" d="M19.5 5.5a9 9 0 0 1 0 13"/></svg>`;
+
+function loadMarks() { try { return JSON.parse(localStorage.getItem("marks") || "{}"); } catch (e) { return {}; } }
+function saveMarks() { try { localStorage.setItem("marks", JSON.stringify(marks)); } catch (e) {} }
+let marks = loadMarks();
+const appliers = [];
+
+function build(id, items) {
+  const ul = document.getElementById(id);
+  items.forEach(([fr, en, sp], i) => {
+    const key = id + ":" + i;
+    const li = document.createElement("li");
+    li.className = "row";
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "phrase";
+    b.setAttribute("aria-label", `Play: ${fr}`);
+    b.innerHTML = `<span class="text"><span class="fr" lang="fr"></span><span class="en"></span></span>${icon}`;
+    b.querySelector(".fr").textContent = fr;
+    b.querySelector(".en").textContent = en;
+    b.addEventListener("click", () => { li.classList.add("revealed"); say(sp || fr, b); });
+
+    const m = document.createElement("div");
+    m.className = "marks";
+    m.innerHTML = `<button type="button" class="mark tick" aria-label="Mark correct" aria-pressed="false">✓</button><button type="button" class="mark cross" aria-label="Mark wrong" aria-pressed="false">✗</button>`;
+    const [tick, cross] = m.querySelectorAll("button");
+    const apply = () => {
+      const v = marks[key];
+      li.classList.toggle("correct", v === "y");
+      li.classList.toggle("wrong", v === "n");
+      tick.setAttribute("aria-pressed", v === "y");
+      cross.setAttribute("aria-pressed", v === "n");
+    };
+    const set = v => {
+      const was = marks[key];
+      if (was === v) delete marks[key]; else marks[key] = v;
+      if (v === "y" && was !== "y") {
+        const p = document.createElement("span");
+        p.className = "pop"; p.textContent = "+10 🪙";
+        li.appendChild(p); setTimeout(() => p.remove(), 900);
+      }
+      saveMarks(); apply(); updateScore();
+    };
+    tick.addEventListener("click", () => set("y"));
+    cross.addEventListener("click", () => set("n"));
+    appliers.push(apply);
+    apply();
+    li.append(b, m);
+    ul.appendChild(li);
+  });
+}
+
+function updateScore() {
+  const total = document.querySelectorAll("li.row").length;
+  const c = document.querySelectorAll("li.row.correct").length;
+  const w = document.querySelectorAll("li.row.wrong").length;
+  document.getElementById("score").textContent = `✓ ${c}   ✗ ${w}   ${total - c - w} to go`;
+  document.getElementById("level").textContent = `Level ${Math.floor(c / 5) + 1}  🪙 ${c * 10}`;
+  document.getElementById("xpfill").style.width = `${(c % 5) * 20}%`;
+}
+build("spelling", spelling);
+build("numbers", numbers);
+build("birthday", birthday);
+build("months", months);
+build("days", days);
+build("colours", colours);
+build("things", things);
+build("instructions", instructions);
+updateScore();
+
+const mainEl = document.querySelector("main");
+function setMode(mode) {
+  mainEl.dataset.hide = mode;
+  document.querySelectorAll("li.revealed").forEach(li => li.classList.remove("revealed"));
+  document.querySelectorAll("#modes button").forEach(x => x.setAttribute("aria-pressed", x.dataset.hide === mode));
+  try { localStorage.setItem("mode", mode); } catch (e) {}
+}
+document.querySelectorAll("#modes button").forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.hide)));
+let savedMode = "none";
+try { savedMode = localStorage.getItem("mode") || "none"; } catch (e) {}
+setMode(savedMode);
+
+document.getElementById("reset").addEventListener("click", () => {
+  marks = {};
+  saveMarks();
+  appliers.forEach(a => a());
+  document.querySelectorAll("li.revealed").forEach(li => li.classList.remove("revealed"));
+  updateScore();
+});
+
+let rate = 0.9;
+document.querySelectorAll(".speed button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    rate = parseFloat(btn.dataset.rate);
+    document.querySelectorAll(".speed button").forEach(x => x.setAttribute("aria-pressed", x === btn));
+  });
+});
+
+const synth = window.speechSynthesis;
+if (!synth) document.getElementById("warn").style.display = "block";
+
+let voice = null;
+function pickVoice() {
+  if (!synth) return;
+  const voices = synth.getVoices();
+  voice = voices.find(v => v.lang === "fr-FR" && /google|amélie|thomas|audrey/i.test(v.name))
+       || voices.find(v => v.lang === "fr-FR")
+       || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("fr"))
+       || null;
+}
+if (synth) { pickVoice(); synth.addEventListener?.("voiceschanged", pickVoice); }
+
+function say(text, el) {
+  if (!synth) return;
+  synth.cancel();
+  document.querySelectorAll(".speaking").forEach(x => x.classList.remove("speaking"));
+  const u = new SpeechSynthesisUtterance(spoken(text));
+  u.lang = "fr-FR";
+  if (voice) u.voice = voice;
+  u.rate = rate;
+  el.classList.add("speaking");
+  const done = () => el.classList.remove("speaking");
+  u.onend = done; u.onerror = done;
+  synth.speak(u);
+}
+</script>
+</body>
+</html>

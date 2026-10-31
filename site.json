@@ -1,0 +1,12 @@
+{
+  "title": "Homework",
+  "subjects": [
+    {
+      "name": "French",
+      "folder": "French",
+      "homework": [
+        { "title": "October 2026", "file": "ericblox.html" }
+      ]
+    }
+  ]
+}
