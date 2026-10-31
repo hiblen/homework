@@ -5,7 +5,14 @@
       "name": "French",
       "folder": "French",
       "homework": [
-        { "title": "October 2026", "file": "ericblox.html" }
+        {
+          "title": "October 2026",
+          "file": "ericblox.html"
+        },
+        {
+          "title": "Practice October 2026",
+          "file": "practice-october-2026.html"
+        }
       ]
     }
   ]
