@@ -31,5 +31,5 @@ In the Cloudflare dashboard: **Workers & Pages → Create → Import a repositor
 - **Preview command:** leave Cloudflare's default (gives preview URLs for other branches)
 
 Every push to `main` then builds and deploys. Config lives in `wrangler.jsonc`,
-including the custom domains (`bloxbound.info` and `www.bloxbound.info`), which
+including the custom domains (`bloxbound.uk` and `www.bloxbound.uk`), which
 Cloudflare attaches to the Worker on deploy.

@@ -5,8 +5,8 @@
   "workers_dev": true,
   "preview_urls": true,
   "routes": [
-    { "pattern": "bloxbound.info", "custom_domain": true },
-    { "pattern": "www.bloxbound.info", "custom_domain": true }
+    { "pattern": "bloxbound.uk", "custom_domain": true },
+    { "pattern": "www.bloxbound.uk", "custom_domain": true }
   ],
   "assets": {
     "directory": "./dist",
